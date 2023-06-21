@@ -2,13 +2,30 @@ import pygame
 from constantes import *
 
 class Background():
-    def __init__(self, image_path, display_height):
+    def __init__(self, image_path):
         self.background_image = pygame.image.load(image_path)
-        self.background_image = scale_image(self.background_image, display_height)
-        self.height, self.width = self.background_image.get.size()
-        self.x_position = 0
+        self.background_image = scale_image(self.background_image, ALTO_VENTANA, 'height')
+        self.width, self.height = self.background_image.get_size()
+        self.visible_rect = pygame.Rect(0, 0, ANCHO_VENTANA, ALTO_VENTANA)
+        self.visible_surface = pygame.Surface(self.visible_rect.size)
+        self.max_reached = False
 
-    
+    def shift_background(self, player_x):
+        
+        if (self.visible_rect.left + ANCHO_VENTANA*2) > self.width:
+            self.max_reached = True
+
+        if self.max_reached:
+            self.visible_rect.left = 0
+            self.max_reached = False
+        else:
+            self.visible_rect.left += player_x
+
+
+        
+        self.visible_surface = pygame.Surface(self.visible_rect.size)
+            
+        
         
 
 def scale_image(image, target_axis_size, axis='width'):

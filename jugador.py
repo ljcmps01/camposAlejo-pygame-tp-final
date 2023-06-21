@@ -2,7 +2,7 @@ import pygame
 from constantes import *
 
 class Player():
-    def __init__(self, x, y, speed = 5, jump = 4)->None:
+    def __init__(self, x, y, speed = 15, jump = 4)->None:
         self.x = x
         self.y = y
         self.speed = speed
@@ -27,7 +27,8 @@ class Player():
         match accion:
             case "GO_LEFT":
                 self.x -= self.speed
-                
+                if self.x < 0:
+                    self.x = 0
             case "GO_RIGHT":
                 self.x += self.speed
             case "JUMP":
@@ -40,5 +41,5 @@ class Player():
 
 
     def update_position(self,display)->None:
-        pygame.draw.rect(display, (0,0,255),(self.x,self.y, self.size_x, self.size_y))
+        pygame.draw.rect(display, (255,0,0),(self.x,self.y, self.size_x, self.size_y))
 
