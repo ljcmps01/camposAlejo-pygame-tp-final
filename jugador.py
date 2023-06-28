@@ -27,14 +27,16 @@ class Player():
         match accion:
             case "GO_LEFT":
                 self.x -= self.speed
-                if self.x < 0:
-                    self.x = 0
             case "GO_RIGHT":
                 self.x += self.speed
             case "JUMP":
                 self.y -= self.speed
+                if self.y < 0:
+                    self.y = 0
             case "GO_DOWN":
                 self.y += self.speed
+                if self.y > Y_PISO_BASE:
+                    self.y = Y_PISO_BASE
             case _:
                 pass
         print("pos: {0},{1}".format(self.x,self.y))

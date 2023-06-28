@@ -13,7 +13,7 @@ background = sala.Background("Recursos\\fondo\palacio_diamante.png")
 
 clock = pygame.time.Clock()
 
-tecnico = Player(0,355)
+tecnico = Player(0,Y_PISO_BASE)
 
 
 while True:
@@ -36,13 +36,11 @@ while True:
     if teclas[ pygame.K_DOWN]:
         tecnico.control("GO_DOWN",display)
 
-    background_surface = pygame.Surface(background.visible_rect.size)
-    background_surface.blit(background.background_image, (0,0), background.visible_rect)
-    display.blit(background_surface, (0,0))
+    display.blit(background.visible_surface, (0,0))
 
-    if tecnico.x > ANCHO_VENTANA:
-        background.shift_background(tecnico.x)
-        tecnico.x = 0
+    if tecnico.x > ANCHO_VENTANA or tecnico.x < 0:
+        tecnico.x = background.shift_background(tecnico.x)
+        
 
 
     tecnico.update_position(display)
