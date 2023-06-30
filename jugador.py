@@ -75,7 +75,7 @@ class Player(pygame.sprite.Sprite):
     def update_sprite(self):
         sprite_sheet = "espera"
         if self.x_vel != 0:
-            sprite_sheet = "correr"
+            sprite_sheet = "caminar"
         
         nombre_sprite_sheet = "{0}_{1}".format(sprite_sheet,self.direccion)
         sprites = self.SPRITES[nombre_sprite_sheet]

@@ -9,3 +9,5 @@ ANCHO_VENTANA = 640
 ALTO_VENTANA = 480
 
 Y_PISO_BASE = 286
+
+DIR_OBSTACULOS = "Recursos\\Obstaculos\\"

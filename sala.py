@@ -39,7 +39,34 @@ class Background():
         
         return new_player_x
         
-        
+class Objeto(pygame.sprite.Sprite):
+    def __init__(self,x,y,width, height, name=None):
+        super().__init__()
+        self.rect = pygame.Rect(x,y,width,height)
+        self.image = pygame.Surface((width, height), pygame.SRCALPHA)
+        self.width = width
+        self.height = height
+        self.name = name
+
+    def draw(self, display):
+        display.blit(self.image, (self.rect.x,self.rect.y))
+
+class Bloque(Objeto):
+    def __init__(self,x,y,size):
+        super().__init__(x,y,size,size)
+        block = get_block(size)
+        self.image.blit(block, (0,0))
+        self.mask = pygame.mask.from_surface(self.image)
+
+def get_block(size):
+    path = DIR_OBSTACULOS + "plataforma3.png"
+    image = pygame.image.load(path)
+    surface = pygame.Surface((size,size),pygame.SRCALPHA,32)
+    rect = pygame.Rect(0,0,size,size)
+    surface.blit(image, (0,0),rect)
+    
+    return surface
+
 
 def scale_image(image, target_axis_size, axis='width'):
     # Determine the current dimensions of the image
