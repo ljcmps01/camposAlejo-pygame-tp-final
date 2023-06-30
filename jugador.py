@@ -1,3 +1,4 @@
+from typing import Any
 import pygame
 from constantes import *
 
@@ -81,6 +82,10 @@ class Player(pygame.sprite.Sprite):
         sprite_index = (self.animation_count // self.DELAY_ANIMACION) % len(sprites)
         self.sprite = sprites[sprite_index]
         self.animation_count+=1
+
+    def update(self):
+        self.rect = self.sprite.get_rect(topleft=(self.rect.x,self.rect.y))
+        self.mask = pygame.mask.from_surface(self.sprite)
 
     def draw(self, display):
         # self.sprite = self.SPRITES["{0}_{1}".format('espera',self.direccion)][0]
