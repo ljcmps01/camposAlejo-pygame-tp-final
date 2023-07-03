@@ -8,7 +8,7 @@ pygame.init()
 
 display = pygame.display.set_mode((ANCHO_VENTANA,ALTO_VENTANA))
 
-background = sala.Background("Recursos\\fondo\palacio_diamante_rojo.png")
+background = sala.Background("Recursos\\fondo\palacio_diamante_rojo_bajobrillo.png")
 # bakckground = pygame.image.scale(bakckground,(ANCHO_VENTANA,ALTO_VENTANA))
 
 clock = pygame.time.Clock()
