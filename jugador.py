@@ -54,6 +54,7 @@ class Player(pygame.sprite.Sprite):
         self.contador_animacion = 0
         self.contador_caida = 0
         self.contador_salto = 0
+        self.correr = False
 
     def move(self, dx, dy):
         self.rect.x += dx
@@ -85,6 +86,8 @@ class Player(pygame.sprite.Sprite):
         self.move(self.x_vel,self.y_vel)
 
         self.contador_caida += 1
+        if self.x_vel == 0:
+            self.correr = False
         self.update_sprite()
 
     def update_sprite(self):
@@ -96,7 +99,10 @@ class Player(pygame.sprite.Sprite):
             sprite_sheet = "caida"
 
         if self.x_vel != 0 and self.contador_salto==0:
-            sprite_sheet = "caminar"
+            if self.correr == True:
+                sprite_sheet = "correr"
+            else:
+                sprite_sheet = "caminar"
         
         nombre_sprite_sheet = "{0}_{1}".format(sprite_sheet,self.direccion)
         sprites = self.SPRITES[nombre_sprite_sheet]
@@ -127,19 +133,20 @@ class Player(pygame.sprite.Sprite):
         match accion:
             case "GO_LEFT":
                 self.move_left(VEL_JUGADOR)
+                self.correr = False
             case "GO_RIGHT":
                 self.move_right(VEL_JUGADOR)
-            case "JUMP":
-                self.rect.y -= self.speed
-                if self.rect.y < 0:
-                    self.rect.y = 0
-            case "GO_DOWN":
-                self.rect.y += self.speed
-                if self.rect.y > Y_PISO_BASE:
-                    self.rect.y = Y_PISO_BASE
+                self.correr = False
+            case "RUN_LEFT":
+                self.move_left(VEL_JUGADOR*RUN_FACTOR)
+                self.correr = True
+            case "RUN_RIGHT":
+                self.move_right(VEL_JUGADOR*RUN_FACTOR)
+                self.correr = True
             case _:
                 pass
         print("pos: {0},{1}".format(self.rect.x,self.rect.y))
+        print("speed: {0}".format(self.correr))
 
     def aterrizar(self):
         self.contador_caida = 0

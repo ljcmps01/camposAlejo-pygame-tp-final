@@ -43,6 +43,9 @@ while True:
         if evento.type == pygame.KEYDOWN:
             if evento.key == pygame.K_UP and tecnico.contador_salto<2:
                 tecnico.salto()
+            # if (evento.key == pygame.K_RIGHT and tecnico.direccion == "der")\
+            # or (evento.key == pygame.K_LEFT and tecnico.direccion == "izq"):
+            #     tecnico.contador_correr+=1
     
 
     tecnico.loop(FPS)
@@ -50,11 +53,17 @@ while True:
     teclas = pygame.key.get_pressed()
     
     tecnico.x_vel = 0
-    if teclas[ pygame.K_LEFT]:
+    if teclas[pygame.K_LEFT]:
         tecnico.control("GO_LEFT")
     
-    if teclas[ pygame.K_RIGHT]:
+    if teclas[pygame.K_RIGHT]:
         tecnico.control("GO_RIGHT")
+
+    if teclas[pygame.K_LEFT] and teclas[pygame.K_LCTRL]:
+        tecnico.control("RUN_LEFT")
+    
+    if teclas[pygame.K_RIGHT] and teclas[pygame.K_LCTRL]:
+        tecnico.control("RUN_RIGHT")
 
     # if teclas[ pygame.K_UP]:
     #     tecnico.control("JUMP")
