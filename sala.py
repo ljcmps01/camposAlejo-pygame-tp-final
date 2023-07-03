@@ -1,4 +1,5 @@
 import pygame
+from jugador import Player
 from constantes import *
 
 class Background():
@@ -23,21 +24,21 @@ class Background():
         return lista_rect
         
 
-    def shift_background(self, player_x):
+def shift_background(background, player_x):
 
-        new_player_x = 0
-        if player_x > ANCHO_VENTANA:
-            self.index_visible += 1
-        else:
-            self.index_visible -= 1
-            new_player_x = ANCHO_VENTANA
-        
-        self.index_visible = self.index_visible % (self.n_surfaces) 
+    new_player_x = 0
+    if player_x+OFFSET_VENTANA > ANCHO_VENTANA:
+        background.index_visible += 1
+    else:
+        background.index_visible -= 1
+        new_player_x = ANCHO_VENTANA-OFFSET_VENTANA
+    
+    background.index_visible = background.index_visible % (background.n_surfaces) 
 
-        
-        self.visible_surface = self.lista_rectangulos_visibles[self.index_visible]
-        
-        return new_player_x
+    
+    background.visible_surface = background.lista_rectangulos_visibles[background.index_visible]
+    
+    return new_player_x
         
 class Objeto(pygame.sprite.Sprite):
     def __init__(self,x,y,width, height, name=None):
@@ -52,20 +53,20 @@ class Objeto(pygame.sprite.Sprite):
         display.blit(self.image, (self.rect.x,self.rect.y))
 
 class Bloque(Objeto):
-    def __init__(self,x,y,size):
+    def __init__(self,x,y,size,escala):
         super().__init__(x,y,size,size)
-        block = get_block(size)
+        block = load_block(size,escala)
         self.image.blit(block, (0,0))
         self.mask = pygame.mask.from_surface(self.image)
 
-def get_block(size):
+def load_block(size,escala=1):
     path = DIR_OBSTACULOS + "plataforma3.png"
     image = pygame.image.load(path)
     surface = pygame.Surface((size,size),pygame.SRCALPHA,32)
     rect = pygame.Rect(0,0,size,size)
     surface.blit(image, (0,0),rect)
-    
-    return surface
+
+    return pygame.transform.scale_by(surface,escala)
 
 
 def scale_image(image, target_axis_size, axis='width'):
@@ -89,3 +90,19 @@ def scale_image(image, target_axis_size, axis='width'):
     scaled_image = pygame.transform.scale(image, (new_width, new_height))
 
     return scaled_image
+
+def manejar_colisiones_verticales(jugador:Player, objetos:list, dy:int):
+    objetos_colisionados = []
+    for objeto in objetos:
+        if pygame.sprite.collide_mask(jugador, objeto):
+            if dy > 0:
+                jugador.rect.bottom = objeto.rect.centery+10
+                jugador.aterrizar()
+
+            elif dy < 0:
+                jugador.rect.top = objeto.rect.bottom
+                jugador.choque_cabeza()
+
+        objetos_colisionados.append(objeto)
+
+    return objetos_colisionados

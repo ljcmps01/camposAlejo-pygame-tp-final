@@ -13,11 +13,14 @@ background = sala.Background("Recursos\\fondo\palacio_diamante_rojo.png")
 
 clock = pygame.time.Clock()
 
-tecnico = Player(0,Y_PISO_BASE)
+tecnico = Player(0,0)
 
-block_size = 32
-blocks = [sala.Bloque(100,Y_PISO_BASE+block_size, block_size)]
-
+block_size = 64
+# blocks = [sala.Bloque(150,Y_PISO_BASE+block_size, block_size)]
+floor = [sala.Bloque(i * block_size,ALTO_VENTANA-block_size, block_size, 2)
+         for i in range(-ANCHO_VENTANA // block_size,(ANCHO_VENTANA * 2)//block_size)]
+# floor.extend([sala.Bloque(i * block_size,ALTO_VENTANA-block_size*2, block_size, 2)
+#          for i in range(-ANCHO_VENTANA // block_size,(ANCHO_VENTANA * 2)//block_size)])
 def draw (display, background:sala.Background, jugador:Player, objetos):
     display.blit(background.visible_surface,(0,0))
     for objeto in objetos:
@@ -36,7 +39,14 @@ while True:
         if evento.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+
+        if evento.type == pygame.KEYDOWN:
+            if evento.key == pygame.K_UP and tecnico.contador_salto<2:
+                tecnico.salto()
     
+
+    tecnico.loop(FPS)
+
     teclas = pygame.key.get_pressed()
     
     tecnico.x_vel = 0
@@ -51,17 +61,16 @@ while True:
 
     # if teclas[ pygame.K_DOWN]:
     #     tecnico.control("GO_DOWN")
+    sala.manejar_colisiones_verticales(tecnico,floor,tecnico.y_vel)
 
-
-    if tecnico.rect.x > ANCHO_VENTANA or tecnico.rect.x < 0:
-        tecnico.rect.x = background.shift_background(tecnico.rect.x)
+    if tecnico.rect.x+OFFSET_VENTANA > ANCHO_VENTANA or tecnico.rect.x < 0:
+        tecnico.rect.x = sala.shift_background(background, tecnico.rect.x)
 
     display.blit(background.visible_surface, (0,0))
 
-    for bloque in blocks:
+    for bloque in floor:
         bloque.draw(display)
         
-    tecnico.loop(FPS)
 
     tecnico.draw(display)
 

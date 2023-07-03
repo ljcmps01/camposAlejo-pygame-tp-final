@@ -27,6 +27,10 @@ def cargar_sprite_sheets(sprite_path,width,height, multidireccion = False):
             else:
                 dict_sprite.update({lista_acciones[fila]:lista_sprites})
 
+        del dict_sprite["salto_izq"][-2:]
+        del dict_sprite["salto_der"][-2:]
+        del dict_sprite["caida_der"][-2:]
+        del dict_sprite["caida_izq"][-2:]
         return dict_sprite
 
 
@@ -43,11 +47,13 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self, x, y)->None:
         self.rect = pygame.Rect(x, y, TAM_X_JUGADOR, TAM_Y_JUGADOR)
+        self.mask = None
         self.x_vel = 0
         self.y_vel = 0
         self.direccion = 'izq'
-        self.animation_count = 0
-        self.fall_count = 0
+        self.contador_animacion = 0
+        self.contador_caida = 0
+        self.contador_salto = 0
 
     def move(self, dx, dy):
         self.rect.x += dx
@@ -57,38 +63,54 @@ class Player(pygame.sprite.Sprite):
         self.x_vel = -vel
         if self.direccion != 'izq':
             self.direccion = 'izq'
-            self.animation_count = 0
+            self.contador_animacion = 0
     
     def move_right(self, vel):
         self.x_vel = +vel
         if self.direccion != 'der':
             self.direccion = 'der'
-            self.animation_count = 0
+            self.contador_animacion = 0
+
+    def salto(self):
+        self.y_vel = -self.GRAVEDAD * 8
+        self.contador_animacion = 0
+        self.contador_salto += 1
+
+        if self.contador_salto == 1:
+            self.contador_caida = 0
+        
 
     def loop(self, fps):
-        # self.y_vel+=min(1,(self.fall_count / fps) * self.GRAVEDAD)
+        self.y_vel+=min(1,(self.contador_caida / fps) * self.GRAVEDAD)
         self.move(self.x_vel,self.y_vel)
 
-        self.fall_count += 1
+        self.contador_caida += 1
         self.update_sprite()
 
     def update_sprite(self):
         sprite_sheet = "espera"
-        if self.x_vel != 0:
+        if self.y_vel < 0:
+            sprite_sheet = "salto"
+
+        if self.y_vel > self.GRAVEDAD*2:
+            sprite_sheet = "caida"
+
+        if self.x_vel != 0 and self.contador_salto==0:
             sprite_sheet = "caminar"
         
         nombre_sprite_sheet = "{0}_{1}".format(sprite_sheet,self.direccion)
         sprites = self.SPRITES[nombre_sprite_sheet]
-        sprite_index = (self.animation_count // self.DELAY_ANIMACION) % len(sprites)
+        sprite_index = (self.contador_animacion // self.DELAY_ANIMACION) % len(sprites)
         self.sprite = sprites[sprite_index]
-        self.animation_count+=1
+        self.contador_animacion+=1
+        self.update()
+        
 
     def update(self):
         self.rect = self.sprite.get_rect(topleft=(self.rect.x,self.rect.y))
         self.mask = pygame.mask.from_surface(self.sprite)
 
     def draw(self, display):
-        # self.sprite = self.SPRITES["{0}_{1}".format('espera',self.direccion)][0]
         display.blit(self.sprite, (self.rect.x,self.rect.y))
 
     def control(self, accion:str):
@@ -118,6 +140,15 @@ class Player(pygame.sprite.Sprite):
             case _:
                 pass
         print("pos: {0},{1}".format(self.rect.x,self.rect.y))
+
+    def aterrizar(self):
+        self.contador_caida = 0
+        self.y_vel = 0
+        self.contador_salto = 0
+    
+    def choque_cabeza(self):
+        self.count = 0
+        self.y_vel *= -1
 
 
 
