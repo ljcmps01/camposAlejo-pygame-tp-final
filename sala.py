@@ -1,6 +1,7 @@
 import pygame
 from jugador import Player
 from constantes import *
+from sprites import *
 
 class Background():
     def __init__(self, image_path):
@@ -53,7 +54,7 @@ class Objeto(pygame.sprite.Sprite):
         display.blit(self.image, (self.rect.x,self.rect.y))
 
 class Bloque(Objeto):
-    def __init__(self,x,y,size,escala):
+    def __init__(self,x,y,size,escala=1):
         super().__init__(x,y,size,size)
         block = load_block(size,escala)
         self.image.blit(block, (0,0))
@@ -65,6 +66,7 @@ def load_block(size,escala=1):
     surface = pygame.Surface((size,size),pygame.SRCALPHA,32)
     rect = pygame.Rect(0,0,size,size)
     surface.blit(image, (0,0),rect)
+    surface = trim_transparent(surface)
 
     return pygame.transform.scale_by(surface,escala)
 

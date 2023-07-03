@@ -16,11 +16,10 @@ clock = pygame.time.Clock()
 tecnico = Player(0,0)
 
 block_size = 64
-# blocks = [sala.Bloque(150,Y_PISO_BASE+block_size, block_size)]
+blocks = [sala.Bloque(150,Y_PISO_BASE+block_size, block_size)]
 floor = [sala.Bloque(i * block_size,ALTO_VENTANA-block_size, block_size, 2)
          for i in range(-ANCHO_VENTANA // block_size,(ANCHO_VENTANA * 2)//block_size)]
-# floor.extend([sala.Bloque(i * block_size,ALTO_VENTANA-block_size*2, block_size, 2)
-#          for i in range(-ANCHO_VENTANA // block_size,(ANCHO_VENTANA * 2)//block_size)])
+
 def draw (display, background:sala.Background, jugador:Player, objetos):
     display.blit(background.visible_surface,(0,0))
     for objeto in objetos:
@@ -71,6 +70,8 @@ while True:
     # if teclas[ pygame.K_DOWN]:
     #     tecnico.control("GO_DOWN")
     sala.manejar_colisiones_verticales(tecnico,floor,tecnico.y_vel)
+    sala.manejar_colisiones_verticales(tecnico,blocks,tecnico.y_vel)
+
 
     if tecnico.rect.x+OFFSET_VENTANA > ANCHO_VENTANA or tecnico.rect.x < 0:
         tecnico.rect.x = sala.shift_background(background, tecnico.rect.x)
@@ -78,6 +79,9 @@ while True:
     display.blit(background.visible_surface, (0,0))
 
     for bloque in floor:
+        bloque.draw(display)
+        
+    for bloque in blocks:
         bloque.draw(display)
         
 

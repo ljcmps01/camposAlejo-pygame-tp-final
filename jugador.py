@@ -1,6 +1,7 @@
 from typing import Any
 import pygame
 from constantes import *
+from sprites import *
 
 def cargar_sprite_sheets(sprite_path,width,height, multidireccion = False):
         sprite_sheet= pygame.image.load(sprite_path)
@@ -19,6 +20,7 @@ def cargar_sprite_sheets(sprite_path,width,height, multidireccion = False):
                 surface = pygame.Surface((width, height), pygame.SRCALPHA, 32)
                 rect = pygame.Rect(columna*width, fila*height, width, height)
                 surface.blit(sprite_sheet,(0,0),rect)
+                # surface=trim_transparent(surface)
                 lista_sprites.append(pygame.transform.scale_by(surface,2.5))
 
             if multidireccion:
