@@ -108,3 +108,20 @@ def manejar_colisiones_verticales(jugador:Player, objetos:list, dy:int):
         objetos_colisionados.append(objeto)
 
     return objetos_colisionados
+
+def colision(jugador:Player, objetos:list, dx:int):
+    jugador.move(dx, 0)
+    jugador.update()
+
+    objeto_colisionado = None
+
+    for objeto in objetos:
+        if pygame.sprite.collide_mask(jugador,objeto):
+            objeto_colisionado = objeto
+            break
+
+    jugador.move(-dx, 0)
+    jugador.update()
+
+    print (dx)
+    return objeto_colisionado

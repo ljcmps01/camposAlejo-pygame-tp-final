@@ -16,7 +16,7 @@ clock = pygame.time.Clock()
 tecnico = Player(0,0)
 
 block_size = 64
-blocks = [sala.Bloque(150,Y_PISO_BASE+block_size, block_size)]
+blocks = [sala.Bloque(150,Y_PISO_BASE*1.55, block_size)]
 floor = [sala.Bloque(i * block_size,ALTO_VENTANA-block_size, block_size, 2)
          for i in range(-ANCHO_VENTANA // block_size,(ANCHO_VENTANA * 2)//block_size)]
 
@@ -49,26 +49,24 @@ while True:
 
     tecnico.loop(FPS)
 
+    colisiones_izq = sala.colision(tecnico, blocks, (-tecnico.x_vel)*2)
+    colisiones_der = sala.colision(tecnico, blocks, tecnico.x_vel*2)
+
     teclas = pygame.key.get_pressed()
     
     tecnico.x_vel = 0
-    if teclas[pygame.K_LEFT]:
+    if teclas[pygame.K_LEFT] and not colisiones_izq:
         tecnico.control("GO_LEFT")
     
-    if teclas[pygame.K_RIGHT]:
+    if teclas[pygame.K_RIGHT] and not colisiones_der:
         tecnico.control("GO_RIGHT")
 
-    if teclas[pygame.K_LEFT] and teclas[pygame.K_LCTRL]:
+    if teclas[pygame.K_LEFT] and teclas[pygame.K_LCTRL] and not colisiones_izq:
         tecnico.control("RUN_LEFT")
     
-    if teclas[pygame.K_RIGHT] and teclas[pygame.K_LCTRL]:
+    if teclas[pygame.K_RIGHT] and teclas[pygame.K_LCTRL] and not colisiones_der:
         tecnico.control("RUN_RIGHT")
 
-    # if teclas[ pygame.K_UP]:
-    #     tecnico.control("JUMP")
-
-    # if teclas[ pygame.K_DOWN]:
-    #     tecnico.control("GO_DOWN")
     sala.manejar_colisiones_verticales(tecnico,floor,tecnico.y_vel)
     sala.manejar_colisiones_verticales(tecnico,blocks,tecnico.y_vel)
 
