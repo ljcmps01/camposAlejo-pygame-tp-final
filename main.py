@@ -38,15 +38,12 @@ while True:
         if evento.type == pygame.KEYDOWN:
             if evento.key == pygame.K_UP and tecnico.contador_salto<2:
                 tecnico.salto()
-            # if (evento.key == pygame.K_RIGHT and tecnico.direccion == "der")\
-            # or (evento.key == pygame.K_LEFT and tecnico.direccion == "izq"):
-            #     tecnico.contador_correr+=1
     
 
     tecnico.loop(FPS)
 
-    colisiones_izq = sala.colision(tecnico, blocks, (-tecnico.x_vel)*2)
-    colisiones_der = sala.colision(tecnico, blocks, tecnico.x_vel*2)
+    colisiones_izq = sala.colision(tecnico, blocks, (-tecnico.x_vel)-10)
+    colisiones_der = sala.colision(tecnico, blocks, tecnico.x_vel+10)
 
     teclas = pygame.key.get_pressed()
     

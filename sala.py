@@ -125,5 +125,5 @@ def colision(jugador:Player, objetos:list, dx:int):
     jugador.move(-dx, 0)
     jugador.update()
 
-    print (dx)
+    # print (dx)
     return objeto_colisionado

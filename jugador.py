@@ -154,8 +154,8 @@ class Player(pygame.sprite.Sprite):
                 self.correr = True
             case _:
                 pass
-        print("pos: {0},{1}".format(self.rect.x,self.rect.y))
-        print("speed: {0}".format(self.correr))
+        # print("pos: {0},{1}".format(self.rect.x,self.rect.y))
+        # print("speed: {0}".format(self.correr))
 
     def aterrizar(self):
         self.contador_caida = 0
