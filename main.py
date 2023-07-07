@@ -1,12 +1,8 @@
 import pygame
 import sys
-from jugador import Player
 from constantes import *
+from jugador import Player
 import sala
-
-pygame.init()
-
-display = pygame.display.set_mode((ANCHO_VENTANA,ALTO_VENTANA))
 
 background = sala.Background("Recursos\\fondo\palacio_diamante_rojo_bajobrillo.png")
 # bakckground = pygame.image.scale(bakckground,(ANCHO_VENTANA,ALTO_VENTANA))
@@ -16,7 +12,7 @@ clock = pygame.time.Clock()
 tecnico = Player(0,0)
 
 block_size = 64
-blocks = [sala.Bloque(150,Y_PISO_BASE*1.55, block_size)]
+blocks = [sala.Bloque(150,Y_PISO_BASE*1.55, block_size, 1)]
 floor = [sala.Bloque(i * block_size,ALTO_VENTANA-block_size, block_size, 2)
          for i in range(-ANCHO_VENTANA // block_size,(ANCHO_VENTANA * 2)//block_size)]
 

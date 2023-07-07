@@ -59,14 +59,16 @@ class Bloque(Objeto):
         block = load_block(size,escala)
         self.image.blit(block, (0,0))
         self.mask = pygame.mask.from_surface(self.image)
+        # self.image.blit(self.mask.to_surface(), (0,0))
 
 def load_block(size,escala=1):
     path = DIR_OBSTACULOS + "plataforma3.png"
-    image = pygame.image.load(path)
+    image = pygame.image.load(path).convert_alpha()
     surface = pygame.Surface((size,size),pygame.SRCALPHA,32)
+    # surface = trim_transparent(surface)
+    # surface.fill("red")
     rect = pygame.Rect(0,0,size,size)
     surface.blit(image, (0,0),rect)
-    surface = trim_transparent(surface)
 
     return pygame.transform.scale_by(surface,escala)
 
@@ -98,7 +100,7 @@ def manejar_colisiones_verticales(jugador:Player, objetos:list, dy:int):
     for objeto in objetos:
         if pygame.sprite.collide_mask(jugador, objeto):
             if dy > 0:
-                jugador.rect.bottom = objeto.rect.centery+10
+                jugador.rect.bottom = objeto.rect.top
                 jugador.aterrizar()
 
             elif dy < 0:

@@ -2,37 +2,42 @@ from typing import Any
 import pygame
 from constantes import *
 from sprites import *
+from os import *
 
-def cargar_sprite_sheets(sprite_path,width,height, multidireccion = False):
-        sprite_sheet= pygame.image.load(sprite_path)
 
-        lista_acciones = ['espera','caminar','correr','salto','caida']
+def cargar_sprite_sheets(sprite_path, width, height, multidireccion = False):
+        offset = 16
+        directorio_base = path.join(DIR_SPRITES+sprite_path)
+        animaciones = [imagen for imagen in listdir(directorio_base)] 
 
         dict_sprite = {}
 
-        for fila in range((sprite_sheet.get_height()//height)):
-            
-            lista_sprites = []
-            # dict_sprite.update(lista_acciones[fila])
+        for imagen in animaciones:
+            sprite_sheet= pygame.image.load(path.join(directorio_base,imagen)).convert_alpha()
 
-            for columna in range(sprite_sheet.get_width()//width):
+            lista_sprites = []
+
+            for columna in range(sprite_sheet.get_width()//(width)):
             
                 surface = pygame.Surface((width, height), pygame.SRCALPHA, 32)
-                rect = pygame.Rect(columna*width, fila*height, width, height)
+                if columna == 0:
+                    rect = pygame.Rect((columna*width), 0, width, height)
+                else:
+                    rect = pygame.Rect((columna*width), 0, width, height)
                 surface.blit(sprite_sheet,(0,0),rect)
-                # surface=trim_transparent(surface)
+                surface=trim_transparent(surface)
                 lista_sprites.append(pygame.transform.scale_by(surface,2.5))
 
             if multidireccion:
-                dict_sprite.update({"{0}_{1}".format(lista_acciones[fila],'der') : lista_sprites})
-                dict_sprite.update({"{0}_{1}".format(lista_acciones[fila],'izq') : flip_sprite(lista_sprites)})
+                dict_sprite.update({"{0}_{1}".format(imagen.replace(".png",""),'der') : lista_sprites})
+                dict_sprite.update({"{0}_{1}".format(imagen.replace(".png",""),'izq') : flip_sprite(lista_sprites)})
             else:
-                dict_sprite.update({lista_acciones[fila]:lista_sprites})
+                dict_sprite.update({imagen.replace(".png",""):lista_sprites})
 
-        del dict_sprite["salto_izq"][-2:]
-        del dict_sprite["salto_der"][-2:]
-        del dict_sprite["caida_der"][-2:]
-        del dict_sprite["caida_izq"][-2:]
+        # del dict_sprite["salto_izq"][-2:]
+        # del dict_sprite["salto_der"][-2:]
+        # del dict_sprite["caida_der"][-2:]
+        # del dict_sprite["caida_izq"][-2:]
         return dict_sprite
 
 
@@ -44,7 +49,7 @@ class Player(pygame.sprite.Sprite):
 
     COLOR = (255, 0, 0)
     GRAVEDAD = 1
-    SPRITES = cargar_sprite_sheets("Recursos\\personajes\\tecnico.png",64,64,True)
+    SPRITES = cargar_sprite_sheets("tecnico",64,32,True)
     DELAY_ANIMACION = 10
 
     def __init__(self, x, y)->None:
@@ -117,6 +122,8 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.rect = self.sprite.get_rect(topleft=(self.rect.x,self.rect.y))
         self.mask = pygame.mask.from_surface(self.sprite)
+######        
+        # self.sprite = self.mask.to_surface()
 
     def draw(self, display):
         display.blit(self.sprite, (self.rect.x,self.rect.y))
