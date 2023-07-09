@@ -12,9 +12,9 @@ clock = pygame.time.Clock()
 tecnico = Player(0,0)
 
 block_size = 64
-blocks = [sala.Bloque(150,Y_PISO_BASE*1.55, block_size, 1)]
 floor = [sala.Bloque(i * block_size,ALTO_VENTANA-block_size, block_size, 2)
          for i in range(-ANCHO_VENTANA // block_size,(ANCHO_VENTANA * 2)//block_size)]
+
 
 def draw (display, background:sala.Background, jugador:Player, objetos):
     display.blit(background.visible_surface,(0,0))
@@ -24,6 +24,10 @@ def draw (display, background:sala.Background, jugador:Player, objetos):
     jugador.draw(display)
 
     pygame.display.update()
+
+mapa_bloques = sala.gen_plataformas_from_JSON("escenas.json","facil")
+
+plataformas = mapa_bloques[0]
 
 
 while True:
@@ -42,8 +46,8 @@ while True:
 
     tecnico.loop(FPS)
 
-    colisiones_izq = sala.colision(tecnico, blocks, (-tecnico.x_vel)-10)
-    colisiones_der = sala.colision(tecnico, blocks, tecnico.x_vel+10)
+    colisiones_izq = sala.colision(tecnico, plataformas, (-tecnico.x_vel)-10)
+    colisiones_der = sala.colision(tecnico, plataformas, tecnico.x_vel+10)
 
     teclas = pygame.key.get_pressed()
     
@@ -61,19 +65,22 @@ while True:
         tecnico.control("RUN_RIGHT")
 
     sala.manejar_colisiones_verticales(tecnico,floor,tecnico.y_vel)
-    sala.manejar_colisiones_verticales(tecnico,blocks,tecnico.y_vel)
+    sala.manejar_colisiones_verticales(tecnico,plataformas,tecnico.y_vel)
 
 
     if tecnico.rect.x+OFFSET_VENTANA > ANCHO_VENTANA or tecnico.rect.x < 0:
-        tecnico.rect.x = sala.shift_background(background, tecnico.rect.x)
+        tecnico.rect.x,plataformas = sala.mover_escena(background,mapa_bloques, tecnico.rect.x)
+
 
     display.blit(background.visible_surface, (0,0))
 
     for bloque in floor:
         bloque.draw(display)
         
-    for bloque in blocks:
+    for bloque in plataformas:
         bloque.draw(display)
+
+
         
 
     tecnico.draw(display)

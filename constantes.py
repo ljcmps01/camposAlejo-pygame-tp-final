@@ -11,11 +11,13 @@ ANCHO_VENTANA = 640
 ALTO_VENTANA = 480
 
 OFFSET_VENTANA = 64
+OFFSET_PISO = 2
 
 Y_PISO_BASE = 234
 
 DIR_OBSTACULOS = "Recursos\\Obstaculos\\"
 DIR_SPRITES = "Recursos\\personajes\\"
+DIR_DATA = "data\\"
 
 pygame.init()
 display = pygame.display.set_mode((ANCHO_VENTANA,ALTO_VENTANA))
