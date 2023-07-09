@@ -45,14 +45,18 @@ def flip_sprite(sprites: list):
     return [pygame.transform.flip(sprite, True, False) for sprite in sprites]
 
 
-class Player(pygame.sprite.Sprite):
+class Jugador(pygame.sprite.Sprite):
+    def __init__(self,x,y, vidas):
+        self.vida = vidas
+
+class Personaje(pygame.sprite.Sprite):
 
     COLOR = (255, 0, 0)
     GRAVEDAD = 1
-    SPRITES = cargar_sprite_sheets("tecnico",64,32,True)
     DELAY_ANIMACION = 10
 
     def __init__(self, x, y)->None:
+        self.SPRITES = cargar_sprite_sheets("tecnico",64,32,True)
         self.rect = pygame.Rect(x, y, TAM_X_JUGADOR, TAM_Y_JUGADOR)
         self.mask = None
         self.x_vel = 0

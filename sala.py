@@ -1,5 +1,5 @@
 import pygame
-from jugador import Player
+from personajes import Personaje
 from constantes import *
 from sprites import *
 import json
@@ -63,7 +63,7 @@ class Bloque(Objeto):
 def gen_plataformas_from_JSON(nombre_archivo:str, nivel: str):
     lista_plataformas = []
     with open(DIR_DATA+nombre_archivo) as archivo:
-        lista_escenas = json.load(archivo)[nivel]
+        lista_escenas = json.load(archivo)[nivel]["plataformas"]
     
     for escena in lista_escenas:
         lista_x = escena["x"]
@@ -128,7 +128,7 @@ def scale_image(image, target_axis_size, axis='width'):
 
     return scaled_image
 
-def manejar_colisiones_verticales(jugador:Player, objetos:list, dy:int):
+def manejar_colisiones_verticales(jugador:Personaje, objetos:list, dy:int):
     objetos_colisionados = []
     for objeto in objetos:
         if pygame.sprite.collide_mask(jugador, objeto):
@@ -144,7 +144,7 @@ def manejar_colisiones_verticales(jugador:Player, objetos:list, dy:int):
 
     return objetos_colisionados
 
-def colision(jugador:Player, objetos:list, dx:int):
+def colision(jugador:Personaje, objetos:list, dx:int):
     jugador.move(dx, 0)
     jugador.update()
 

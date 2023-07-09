@@ -1,7 +1,7 @@
 import pygame
 import sys
 from constantes import *
-from jugador import Player
+from personajes import Personaje
 import sala
 
 background = sala.Background("Recursos\\fondo\palacio_diamante_rojo_bajobrillo.png")
@@ -9,14 +9,14 @@ background = sala.Background("Recursos\\fondo\palacio_diamante_rojo_bajobrillo.p
 
 clock = pygame.time.Clock()
 
-tecnico = Player(0,0)
+jugador = Personaje(0,0)
 
 block_size = 64
 floor = [sala.Bloque(i * block_size,ALTO_VENTANA-block_size, block_size, 2)
          for i in range(-ANCHO_VENTANA // block_size,(ANCHO_VENTANA * 2)//block_size)]
 
 
-def draw (display, background:sala.Background, jugador:Player, objetos):
+def draw (display, background:sala.Background, jugador:Personaje, objetos):
     display.blit(background.visible_surface,(0,0))
     for objeto in objetos:
         objeto.draw(display)
@@ -40,36 +40,36 @@ while True:
             sys.exit()
 
         if evento.type == pygame.KEYDOWN:
-            if evento.key == pygame.K_UP and tecnico.contador_salto<2:
-                tecnico.salto()
+            if evento.key == pygame.K_UP and jugador.contador_salto<2:
+                jugador.salto()
     
 
-    tecnico.loop(FPS)
+    jugador.loop(FPS)
 
-    colisiones_izq = sala.colision(tecnico, plataformas, (-tecnico.x_vel)-10)
-    colisiones_der = sala.colision(tecnico, plataformas, tecnico.x_vel+10)
+    colisiones_izq = sala.colision(jugador, plataformas, (-jugador.x_vel)-10)
+    colisiones_der = sala.colision(jugador, plataformas, jugador.x_vel+10)
 
     teclas = pygame.key.get_pressed()
     
-    tecnico.x_vel = 0
+    jugador.x_vel = 0
     if teclas[pygame.K_LEFT] and not colisiones_izq:
-        tecnico.control("GO_LEFT")
+        jugador.control("GO_LEFT")
     
     if teclas[pygame.K_RIGHT] and not colisiones_der:
-        tecnico.control("GO_RIGHT")
+        jugador.control("GO_RIGHT")
 
     if teclas[pygame.K_LEFT] and teclas[pygame.K_LCTRL] and not colisiones_izq:
-        tecnico.control("RUN_LEFT")
+        jugador.control("RUN_LEFT")
     
     if teclas[pygame.K_RIGHT] and teclas[pygame.K_LCTRL] and not colisiones_der:
-        tecnico.control("RUN_RIGHT")
+        jugador.control("RUN_RIGHT")
 
-    sala.manejar_colisiones_verticales(tecnico,floor,tecnico.y_vel)
-    sala.manejar_colisiones_verticales(tecnico,plataformas,tecnico.y_vel)
+    sala.manejar_colisiones_verticales(jugador,floor,jugador.y_vel)
+    sala.manejar_colisiones_verticales(jugador,plataformas,jugador.y_vel)
 
 
-    if tecnico.rect.x+OFFSET_VENTANA > ANCHO_VENTANA or tecnico.rect.x < 0:
-        tecnico.rect.x,plataformas = sala.mover_escena(background,mapa_bloques, tecnico.rect.x)
+    if jugador.rect.x+OFFSET_VENTANA > ANCHO_VENTANA or jugador.rect.x < 0:
+        jugador.rect.x,plataformas = sala.mover_escena(background,mapa_bloques, jugador.rect.x)
 
 
     display.blit(background.visible_surface, (0,0))
@@ -83,7 +83,7 @@ while True:
 
         
 
-    tecnico.draw(display)
+    jugador.draw(display)
 
     pygame.display.flip()
     
